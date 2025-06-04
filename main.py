@@ -2,8 +2,6 @@ import tkinter as tk
 from tkinter import messagebox as mb
 from tkinter import simpledialog as sd
 
-import button_functions
-
 root = tk.Tk()
 root.resizable(height=False, width=False)
 buttons = []
