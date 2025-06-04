@@ -11,7 +11,7 @@ buttons = []
 import random
 
 def rate_spiel(): 
-    # Das Programm wählt eine zufällige Zahl zwischen 1 und 100
+    # Die Funktion wählt eine zufällige Zahl zwischen 1 und 100
     minimum = 1
     maximum = 100
     zufallszahl = random.randint(minimum, maximum) 
@@ -63,6 +63,11 @@ def open_anim_window():
  
     update_frame(0)
 
+def shuffle_buttons():
+    for button in buttons:
+        button.grid_forget()
+    random.shuffle(buttons)
+    place_buttons()
 
 #Ratespiel
 buttons.append(tk.Button(root, text='Ratespiel', bg='light green', font='blot, 60', fg='red', command=rate_spiel))
@@ -70,27 +75,36 @@ buttons.append(tk.Button(root, text='Ratespiel', bg='light green', font='blot, 6
 buttons.append(tk.Button(root, text='Gong', bg='dark blue', font='blot, 60', fg='grey', command=play_gongsound))
 #Popcorn Gif
 buttons.append(tk.Button(root, text='Popcorn', bg='yellow', font='blot, 60', fg='white', command=open_anim_window))
+#Shuffle Buttons
+buttons.append(tk.Button(root, text='Shuffle', bg='light green', font='blot, 60', fg='red', command=shuffle_buttons))
 #
-buttons.append(tk.Button(root, text='test3', bg='light green', font='blot, 60', fg='red'))
+buttons.append(tk.Button(root, text='test5', bg='light green', font='blot, 60', fg='red'))
 #
-buttons.append(tk.Button(root, text='test3', bg='light green', font='blot, 60', fg='red'))
+buttons.append(tk.Button(root, text='test6', bg='light green', font='blot, 60', fg='red'))
 #
-buttons.append(tk.Button(root, text='test3', bg='light green', font='blot, 60', fg='red'))
+buttons.append(tk.Button(root, text='test7', bg='light green', font='blot, 60', fg='red'))
 #
-buttons.append(tk.Button(root, text='test3', bg='light green', font='blot, 60', fg='red'))
+buttons.append(tk.Button(root, text='test8', bg='light green', font='blot, 60', fg='red'))
 
 
 #Place the Buttons
 def place_buttons():
-    column_count = 2
-    for y in range(column_count):
-        for x in range(len(buttons)//column_count):
-            button_index = x + y * len(buttons) // column_count
-            if button_index == len(buttons):
-                buttons[button_index].grid(column=x, row=y, columnspan=len(buttons) % column_count)
-            else:
+    column_count = 3
+    row_count = len(buttons)/column_count
+    if row_count > int(row_count):
+        row_count +=1
+    row_count = int(row_count)
+    for y in range(row_count):
+        root.rowconfigure(y, weight=1)
+        for x in range(column_count):
+            root.columnconfigure(x, weight=1)
+            button_index = x + y * column_count
+            if button_index < len(buttons) -1:
                 buttons[button_index].grid(column=x, row=y, padx=10, pady=10)
-    
+            else:
+                buttons[button_index].grid(column=x, row=y, padx=10, pady=10, columnspan=column_count - x)
+                return
+            
 place_buttons()
 
 root.mainloop()
