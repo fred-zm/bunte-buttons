@@ -35,18 +35,41 @@ def rate_spiel():
         pass
     root.deiconify()
 
+
 import pygame
 pygame.mixer.init()
+
 def play_gongsound():
     pygame.mixer.music.load('gong-sound-effect-308757.mp3')
     pygame.mixer.music.play()
+
+
+from PIL import Image, ImageTk, ImageSequence 
+
+def open_anim_window(): 
+    anim_window = tk.Toplevel(root)
+    anim_window.title("Animation")
+ 
+    label = tk.Label(anim_window)
+    label.pack()
+ 
+    gif = Image.open("./giphy.gif")
+    frames = [ImageTk.PhotoImage(img) for img in ImageSequence.Iterator(gif)]
+ 
+    def update_frame(index):
+        frame = frames[index]
+        label.configure(image=frame)
+        anim_window.after(100, update_frame, (index + 1) % len(frames))
+ 
+    update_frame(0)
+
 
 #Ratespiel
 buttons.append(tk.Button(root, text='Ratespiel', bg='light green', font='blot, 60', fg='red', command=rate_spiel))
 #Play Gongsound
 buttons.append(tk.Button(root, text='Gong', bg='dark blue', font='blot, 60', fg='grey', command=play_gongsound))
-#
-buttons.append(tk.Button(root, text='test3', bg='light green', font='blot, 60', fg='red'))
+#Popcorn Gif
+buttons.append(tk.Button(root, text='Popcorn', bg='yellow', font='blot, 60', fg='white', command=open_anim_window))
 #
 buttons.append(tk.Button(root, text='test3', bg='light green', font='blot, 60', fg='red'))
 #
@@ -57,16 +80,18 @@ buttons.append(tk.Button(root, text='test3', bg='light green', font='blot, 60', 
 buttons.append(tk.Button(root, text='test3', bg='light green', font='blot, 60', fg='red'))
 
 
-column_count = 2
-
-for y in range(column_count):
-    for x in range(len(buttons)//column_count):
-        button_index = x + y * len(buttons) // column_count
-        if button_index == len(buttons):
-            buttons[button_index].grid(column=x, row=y, columnspan=len(buttons) % column_count)
-        else:
-            buttons[button_index].grid(column=x, row=y, padx=10, pady=10)
+#Place the Buttons
+def place_buttons():
+    column_count = 2
+    for y in range(column_count):
+        for x in range(len(buttons)//column_count):
+            button_index = x + y * len(buttons) // column_count
+            if button_index == len(buttons):
+                buttons[button_index].grid(column=x, row=y, columnspan=len(buttons) % column_count)
+            else:
+                buttons[button_index].grid(column=x, row=y, padx=10, pady=10)
     
+place_buttons()
 
 root.mainloop()
 pygame.mixer.quit()
