@@ -2,9 +2,14 @@ import tkinter as tk
 from tkinter import messagebox as mb
 from tkinter import simpledialog as sd
 
+from PIL import Image, ImageTk, ImageSequence 
+
 
 root = tk.Tk()
+root.title('Bunte Buttons')
 root.resizable(height=False, width=False)
+main = tk.Frame(root)
+
 buttons = []
 
 
@@ -44,8 +49,6 @@ def play_gongsound():
     pygame.mixer.music.play()
 
 
-from PIL import Image, ImageTk, ImageSequence 
-
 def open_anim_window(): 
     anim_window = tk.Toplevel(root)
     anim_window.title("Animation")
@@ -69,23 +72,23 @@ def shuffle_buttons():
     random.shuffle(buttons)
     place_buttons()
 
-#Ratespiel
-buttons.append(tk.Button(root, text='Ratespiel', bg='light green', font='blot, 60', fg='red', command=rate_spiel))
-#Play Gongsound
-buttons.append(tk.Button(root, text='Gong', bg='dark blue', font='blot, 60', fg='grey', command=play_gongsound))
-#Popcorn Gif
-buttons.append(tk.Button(root, text='Popcorn', bg='yellow', font='blot, 60', fg='white', command=open_anim_window))
-#Shuffle Buttons
-buttons.append(tk.Button(root, text='Shuffle', bg='light green', font='blot, 60', fg='red', command=shuffle_buttons))
-#
-buttons.append(tk.Button(root, text='test5', bg='light green', font='blot, 60', fg='red'))
-#
-buttons.append(tk.Button(root, text='test6', bg='light green', font='blot, 60', fg='red'))
-#
-buttons.append(tk.Button(root, text='test7', bg='light green', font='blot, 60', fg='red'))
-#
-buttons.append(tk.Button(root, text='test8', bg='light green', font='blot, 60', fg='red'))
 
+#Ratespiel
+buttons.append(tk.Button(main, text='Ratespiel', bg='light green', font='blot, 60', fg='red', command=rate_spiel))
+#Play Gongsound
+buttons.append(tk.Button(main, text='Gong', bg='dark blue', font='blot, 60', fg='grey', command=play_gongsound))
+#Popcorn Gif
+buttons.append(tk.Button(main, text='Popcorn', bg='yellow', font='blot, 60', fg='white', command=open_anim_window))
+#Shuffle Buttons
+buttons.append(tk.Button(main, text='Shuffle', bg='light blue', font='blot, 60', fg='black', command=shuffle_buttons))
+#
+buttons.append(tk.Button(main, text='test5', bg='white', font='blot, 60', fg='red'))
+#
+buttons.append(tk.Button(main, text='test6', bg='white', font='blot, 60', fg='red'))
+#
+buttons.append(tk.Button(main, text='test7', bg='white', font='blot, 60', fg='red'))
+#
+buttons.append(tk.Button(main, text='test8', bg='white', font='blot, 60', fg='red'))
 
 #Place the Buttons
 def place_buttons():
@@ -100,12 +103,42 @@ def place_buttons():
             root.columnconfigure(x, weight=1)
             button_index = x + y * column_count
             if button_index < len(buttons) -1:
-                buttons[button_index].grid(column=x, row=y, padx=10, pady=10)
+                buttons[button_index].grid(column=x, row=y, padx=5, pady=5, sticky='nesw')
             else:
-                buttons[button_index].grid(column=x, row=y, padx=10, pady=10, columnspan=column_count - x)
+                buttons[button_index].grid(column=x, row=y, padx=5, pady=5, sticky='nesw', columnspan=column_count - x)
                 return
-            
+
+main.grid(column=0, row=0, padx=20, pady=20, sticky='nesw')
 place_buttons()
+
+# Load the image
+bg_image = Image.open("./premium_photo-1687173116184-2277b7a516ca.jpg")  # Replace with your image path
+bg_image = bg_image.resize((1200, 1000))   # Resize to fit the window
+bg_photo = ImageTk.PhotoImage(bg_image)
+ 
+# Set the image as background using a Label
+background_label1 = tk.Label(root, image=bg_photo)
+background_label2 = tk.Label(main, image=bg_photo)
+
+background_label1.place(x=0, y=0, relwidth=1, relheight=1)
+background_label1.lower()
+ 
+background_label2.place(x=0, y=0, relwidth=1, relheight=1)
+background_label2.lower()
+
+def resize_background(event):
+    # Berechne die neue Größe
+    new_width = event.width
+    new_height = event.height
+
+    # Skaliere das Bild auf die neue Fenstergröße
+    resized_image = bg_image.resize((new_width, new_height))
+    bg_photo = ImageTk.PhotoImage(resized_image)
+
+    # Aktualisiere das Label mit dem neuen Bild
+    background_label1.config(image=bg_photo)
+#root.bind('<Configure>', resize_background)
+
 
 root.mainloop()
 pygame.mixer.quit()
