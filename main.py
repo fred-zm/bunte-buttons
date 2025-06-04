@@ -7,8 +7,7 @@ from PIL import Image, ImageTk, ImageSequence
 
 root = tk.Tk()
 root.title('Bunte Buttons')
-root.resizable(height=False, width=False)
-main = tk.Frame(root)
+#root.resizable(height=False, width=False)
 
 buttons = []
 
@@ -74,21 +73,21 @@ def shuffle_buttons():
 
 
 #Ratespiel
-buttons.append(tk.Button(main, text='Ratespiel', bg='light green', font='blot, 60', fg='red', command=rate_spiel))
+buttons.append(tk.Button(root, text='Ratespiel', bg='light green', font='blot, 60', fg='red', command=rate_spiel))
 #Play Gongsound
-buttons.append(tk.Button(main, text='Gong', bg='dark blue', font='blot, 60', fg='grey', command=play_gongsound))
+buttons.append(tk.Button(root, text='Gong', bg='dark blue', font='blot, 60', fg='grey', command=play_gongsound))
 #Popcorn Gif
-buttons.append(tk.Button(main, text='Popcorn', bg='yellow', font='blot, 60', fg='white', command=open_anim_window))
+buttons.append(tk.Button(root, text='Popcorn', bg='yellow', font='blot, 60', fg='white', command=open_anim_window))
 #Shuffle Buttons
-buttons.append(tk.Button(main, text='Shuffle', bg='light blue', font='blot, 60', fg='black', command=shuffle_buttons))
+buttons.append(tk.Button(root, text='Shuffle', bg='light blue', font='blot, 60', fg='black', command=shuffle_buttons))
 #
-buttons.append(tk.Button(main, text='test5', bg='white', font='blot, 60', fg='red'))
+buttons.append(tk.Button(root, text='test5', bg='white', font='blot, 60', fg='red'))
 #
-buttons.append(tk.Button(main, text='test6', bg='white', font='blot, 60', fg='red'))
+buttons.append(tk.Button(root, text='test6', bg='white', font='blot, 60', fg='red'))
 #
-buttons.append(tk.Button(main, text='test7', bg='white', font='blot, 60', fg='red'))
+buttons.append(tk.Button(root, text='test7', bg='white', font='blot, 60', fg='red'))
 #
-buttons.append(tk.Button(main, text='test8', bg='white', font='blot, 60', fg='red'))
+buttons.append(tk.Button(root, text='test8', bg='white', font='blot, 60', fg='red'))
 
 #Place the Buttons
 def place_buttons():
@@ -104,27 +103,21 @@ def place_buttons():
             button_index = x + y * column_count
             if button_index < len(buttons) -1:
                 buttons[button_index].grid(column=x, row=y, padx=5, pady=5, sticky='nesw')
+                buttons[button_index].lift()
             else:
                 buttons[button_index].grid(column=x, row=y, padx=5, pady=5, sticky='nesw', columnspan=column_count - x)
+                buttons[button_index].lift()
                 return
 
-main.grid(column=0, row=0, padx=20, pady=20, sticky='nesw')
+
 place_buttons()
 
 # Load the image
 bg_image = Image.open("./premium_photo-1687173116184-2277b7a516ca.jpg")  # Replace with your image path
-bg_image = bg_image.resize((1200, 1000))   # Resize to fit the window
-bg_photo = ImageTk.PhotoImage(bg_image)
- 
-# Set the image as background using a Label
-background_label1 = tk.Label(root, image=bg_photo)
-background_label2 = tk.Label(main, image=bg_photo)
+bg_canvas = tk.Canvas(root)
+bg_canvas.place(x=0, y=0, relwidth=1, relheight=1)
 
-background_label1.place(x=0, y=0, relwidth=1, relheight=1)
-background_label1.lower()
- 
-background_label2.place(x=0, y=0, relwidth=1, relheight=1)
-background_label2.lower()
+place_buttons()
 
 def resize_background(event):
     # Berechne die neue Größe
@@ -132,12 +125,16 @@ def resize_background(event):
     new_height = event.height
 
     # Skaliere das Bild auf die neue Fenstergröße
-    resized_image = bg_image.resize((new_width, new_height))
-    bg_photo = ImageTk.PhotoImage(resized_image)
+    global bg_image
+    bg_image = bg_image.resize((new_width, new_height), Image.LANCZOS)
+    global bg_photo
+    bg_photo = ImageTk.PhotoImage(bg_image)
 
-    # Aktualisiere das Label mit dem neuen Bild
-    background_label1.config(image=bg_photo)
-#root.bind('<Configure>', resize_background)
+    # Aktualisiere das Canvas mit dem neuen Bild
+    bg_canvas.delete("all")
+    bg_canvas.create_image(0, 0, image=bg_photo, anchor=tk.NW)
+    
+root.bind('<Configure>', resize_background)
 
 
 root.mainloop()
