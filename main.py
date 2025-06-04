@@ -9,26 +9,28 @@ buttons = []
 
 import random
 
-zufallszahl = 0
-versuche = 0
-eingabe = 0
-
-def guess():
-    if eingabe < zufallszahl:
-        eingabe = sd.askinteger(title='', prompt='Zu niedrig')
-    if zufallszahl < eingabe:
-        eingabe = sd.askinteger(title='', prompt='Zu hoch')
-    if eingabe == zufallszahl:
-        mb.showinfo('Gewonnen!!')
-        return
-    guess()
-
 def rate_spiel(): 
     # Das Programm wählt eine zufällige Zahl zwischen 1 und 100
-    zufallszahl = random.randint(1, 100)
+    minimum = 1
+    maximum = 100
+    zufallszahl = random.randint(minimum, maximum) 
     versuche = 0
-    eingabe = sd.askinteger(title='', prompt='Rate die Zahl zwischen 1 und 100')
-    guess()
+    eingabe = minimum - 1
+    try:
+        prompt = f'Rate die Zahl zwischen {minimum} und {maximum}.'
+        while eingabe != zufallszahl:
+            versuche +=1
+            eingabe = sd.askinteger(title='Falsch', prompt=prompt, minvalue=minimum, maxvalue=maximum, parent=root)
+            if eingabe < zufallszahl:
+                prompt = f'{eingabe} war zu niedrig.'
+            if zufallszahl < eingabe:
+                prompt = f'{eingabe} war zu hoch.'
+  
+        mb.showinfo('Gewonnen!', f'{zufallszahl} war richtig!\nDu hast {versuche} Versuche gebraucht.', parent=root)
+    except:
+        pass
+
+
 
 #Ratespiel
 buttons.append(tk.Button(root, text='Ratespiel', bg='light green', font='blot, 60', fg='red', command=rate_spiel))
