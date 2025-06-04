@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import messagebox as mb
 from tkinter import simpledialog as sd
 
+
 root = tk.Tk()
 root.resizable(height=False, width=False)
 buttons = []
@@ -16,11 +17,14 @@ def rate_spiel():
     zufallszahl = random.randint(minimum, maximum) 
     versuche = 0
     eingabe = minimum - 1
+    title = 'Ratespiel'
     try:
         prompt = f'Rate die Zahl zwischen {minimum} und {maximum}.'
         while eingabe != zufallszahl:
             versuche +=1
-            eingabe = sd.askinteger(title='Falsch', prompt=prompt, minvalue=minimum, maxvalue=maximum, parent=root)
+            root.withdraw()
+            eingabe = sd.askinteger(title=title, prompt=prompt, minvalue=minimum, maxvalue=maximum, parent=root)
+            title = 'Falsch'
             if eingabe < zufallszahl:
                 prompt = f'{eingabe} war zu niedrig.'
             if zufallszahl < eingabe:
@@ -29,13 +33,18 @@ def rate_spiel():
         mb.showinfo('Gewonnen!', f'{zufallszahl} war richtig!\nDu hast {versuche} Versuche gebraucht.', parent=root)
     except:
         pass
+    root.deiconify()
 
-
+import pygame
+pygame.mixer.init()
+def play_gongsound():
+    pygame.mixer.music.load('gong-sound-effect-308757.mp3')
+    pygame.mixer.music.play()
 
 #Ratespiel
 buttons.append(tk.Button(root, text='Ratespiel', bg='light green', font='blot, 60', fg='red', command=rate_spiel))
-#
-buttons.append(tk.Button(root, text='test2', bg='light green', font='blot, 60', fg='red'))
+#Play Gongsound
+buttons.append(tk.Button(root, text='Gong', bg='dark blue', font='blot, 60', fg='grey', command=play_gongsound))
 #
 buttons.append(tk.Button(root, text='test3', bg='light green', font='blot, 60', fg='red'))
 #
@@ -48,18 +57,16 @@ buttons.append(tk.Button(root, text='test3', bg='light green', font='blot, 60', 
 buttons.append(tk.Button(root, text='test3', bg='light green', font='blot, 60', fg='red'))
 
 
-column_count = 3
-
-#while len(buttons) % column_count != 0:
-#    buttons.append(tk.Frame())
+column_count = 2
 
 for y in range(column_count):
     for x in range(len(buttons)//column_count):
         button_index = x + y * len(buttons) // column_count
         if button_index == len(buttons):
-            buttons[button_index].grid(column=x, row=y, columnspan=3)
+            buttons[button_index].grid(column=x, row=y, columnspan=len(buttons) % column_count)
         else:
             buttons[button_index].grid(column=x, row=y, padx=10, pady=10)
     
 
 root.mainloop()
+pygame.mixer.quit()
